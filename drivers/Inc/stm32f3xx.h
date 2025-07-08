@@ -87,6 +87,24 @@
 #define EXTI_BASEADDR    (APB2PERIPH_BASEADDR + 0x0400)
 #define SYSCFG_BASEADDR  (APB2PERIPH_BASEADDR + 0x0000)
 
+// --- Advanced-control timer (APB2) ---
+#define TIM1_BASEADDR          (APB2PERIPH_BASEADDR + 0x2C00U)
+
+// --- General-purpose timers (APB1) ---
+#define TIM2_BASEADDR          (APB1PERIPH_BASEADDR + 0x0000U)
+#define TIM3_BASEADDR          (APB1PERIPH_BASEADDR + 0x0400U)
+#define TIM4_BASEADDR          (APB1PERIPH_BASEADDR + 0x0800U)
+
+// --- Basic timers (APB1) ---
+#define TIM6_BASEADDR          (APB1PERIPH_BASEADDR + 0x1000U)
+#define TIM7_BASEADDR          (APB1PERIPH_BASEADDR + 0x1400U)
+
+// --- General-purpose timers (APB2) ---
+#define TIM15_BASEADDR         (APB2PERIPH_BASEADDR + 0x4000U)
+#define TIM16_BASEADDR         (APB2PERIPH_BASEADDR + 0x4400U)
+#define TIM17_BASEADDR         (APB2PERIPH_BASEADDR + 0x4800U)
+
+
 /* GPIO register definition structure */
 typedef struct {
     __vo uint32_t MODER;
@@ -182,6 +200,31 @@ typedef struct {
     __vo uint32_t FLTR;
 } I2C_RegDef_t;
 
+/*Timer register definition structure */
+typedef struct {
+    __vo uint32_t CR1;      // Control register 1
+    __vo uint32_t CR2;      // Control register 2
+    __vo uint32_t SMCR;     // Slave mode control register
+    __vo uint32_t DIER;     // DMA/interrupt enable register
+    __vo uint32_t SR;       // Status register
+    __vo uint32_t EGR;      // Event generation register
+    __vo uint32_t CCMR1;    // Capture/Compare mode register 1
+    __vo uint32_t CCMR2;    // Capture/Compare mode register 2
+    __vo uint32_t CCER;     // Capture/Compare enable register
+    __vo uint32_t CNT;      // Counter
+    __vo uint32_t PSC;      // Prescaler
+    __vo uint32_t ARR;      // Auto-reload register
+    __vo uint32_t RCR;      // Repetition counter register (TIM1/TIM8 only)
+    __vo uint32_t CCR1;     // Capture/Compare register 1
+    __vo uint32_t CCR2;     // Capture/Compare register 2
+    __vo uint32_t CCR3;     // Capture/Compare register 3
+    __vo uint32_t CCR4;     // Capture/Compare register 4
+    __vo uint32_t BDTR;     // Break and dead-time register (TIM1/TIM8)
+    __vo uint32_t DCR;      // DMA control register
+    __vo uint32_t DMAR;     // DMA address for full transfer
+} Timer_RegDef_t;
+
+
 /* Peripheral definitions */
 #define GPIOA   ((GPIO_RegDef_t*)GPIOA_BASEADDR)
 #define GPIOB   ((GPIO_RegDef_t*)GPIOB_BASEADDR)
@@ -206,6 +249,16 @@ typedef struct {
 #define USART3  ((USART_RegDef_t*)USART3_BASEADDR)
 #define UART4   ((USART_RegDef_t*)UART4_BASEADDR)
 #define UART5   ((USART_RegDef_t*)UART5_BASEADDR)
+
+#define TIM1     ((Timer_RegDef_t*)TIM1_BASEADDR)
+#define TIM2     ((Timer_RegDef_t*)TIM2_BASEADDR)
+#define TIM3     ((Timer_RegDef_t*)TIM3_BASEADDR)
+#define TIM4     ((Timer_RegDef_t*)TIM4_BASEADDR)
+#define TIM6     ((Timer_RegDef_t*)TIM6_BASEADDR)
+#define TIM7     ((Timer_RegDef_t*)TIM7_BASEADDR)
+#define TIM15    ((Timer_RegDef_t*)TIM15_BASEADDR)
+#define TIM16    ((Timer_RegDef_t*)TIM16_BASEADDR)
+#define TIM17    ((Timer_RegDef_t*)TIM17_BASEADDR)
 
 
 /*
@@ -251,6 +304,23 @@ typedef struct {
 #define SYSCFG_PCLK_EN()        (RCC->APB2ENR |= (1 << 0))
 
 /*
+ * Clock Enable Macro for TIMER Peripheral (STM32F3)
+ */
+
+#define TIM1_PCLK_EN()     		(RCC->APB2ENR |= (1 << 11))
+#define TIM8_PCLK_EN()     		(RCC->APB2ENR |= (1 << 13))
+#define TIM15_PCLK_EN()     	(RCC->APB2ENR |= (1 << 16))
+#define TIM16_PCLK_EN()     	(RCC->APB2ENR |= (1 << 17))
+#define TIM17_PCLK_EN()     	(RCC->APB2ENR |= (1 << 18))
+#define TIM20_PCLK_EN()     	(RCC->APB2ENR |= (1 << 20))
+
+#define TIM2_PCLK_EN()     		(RCC->APB1ENR |= (1 << 0))
+#define TIM3_PCLK_EN()     		(RCC->APB1ENR |= (1 << 1))
+#define TIM4_PCLK_EN()     		(RCC->APB1ENR |= (1 << 2))
+#define TIM6_PCLK_EN()     		(RCC->APB1ENR |= (1 << 4))
+#define TIM7_PCLK_EN()     		(RCC->APB1ENR |= (1 << 5))
+
+/*
  * Clock Disable Macros for GPIOx Peripheral (STM32F3)
  */
 
@@ -292,7 +362,22 @@ typedef struct {
 
 #define SYSCFG_PCLK_DI()        (RCC->APB2ENR &= ~(1 << 0))
 
+/*
+ * Clock Disable Macro for TIMER Peripheral (STM32F3)
+ */
 
+#define TIM1_PCLK_DI()     		(RCC->APB2ENR &= ~(1 << 11))
+#define TIM8_PCLK_DI()     		(RCC->APB2ENR &= ~(1 << 13))
+#define TIM15_PCLK_DI()     	(RCC->APB2ENR &= ~(1 << 16))
+#define TIM16_PCLK_DI()     	(RCC->APB2ENR &= ~(1 << 17))
+#define TIM17_PCLK_DI()     	(RCC->APB2ENR &= ~(1 << 18))
+#define TIM20_PCLK_DI()     	(RCC->APB2ENR &= ~(1 << 20))
+
+#define TIM2_PCLK_DI()     		(RCC->APB1ENR &= ~(1 << 0))
+#define TIM3_PCLK_DI()     		(RCC->APB1ENR &= ~(1 << 1))
+#define TIM4_PCLK_DI()     		(RCC->APB1ENR &= ~(1 << 2))
+#define TIM6_PCLK_DI()     		(RCC->APB1ENR &= ~(1 << 4))
+#define TIM7_PCLK_DI()     		(RCC->APB1ENR &= ~(1 << 5))
 
 
 /*
@@ -326,6 +411,22 @@ typedef struct {
 #define SPI2_REG_RESET()  do{ (RCC->APB1RSTR |= (1 << 14)); (RCC->APB2RSTR &= ~(1 << 14)); }while(0)
 #define SPI3_REG_RESET()  do{ (RCC->APB1RSTR |= (1 << 15)); (RCC->APB2RSTR &= ~(1 << 15)); }while(0)
 
+/*
+ *  Macros to reset TIMERx peripherals
+ */
+
+#define TIM1_REG_RESET()   do { (RCC->APB2RSTR |=  (1 << 11)); (RCC->APB2RSTR &= ~(1 << 11)); } while(0)
+#define TIM8_REG_RESET()   do { (RCC->APB2RSTR |=  (1 << 13)); (RCC->APB2RSTR &= ~(1 << 13)); } while(0)
+#define TIM15_REG_RESET()  do { (RCC->APB2RSTR |=  (1 << 16)); (RCC->APB2RSTR &= ~(1 << 16)); } while(0)
+#define TIM16_REG_RESET()  do { (RCC->APB2RSTR |=  (1 << 17)); (RCC->APB2RSTR &= ~(1 << 17)); } while(0)
+#define TIM17_REG_RESET()  do { (RCC->APB2RSTR |=  (1 << 18)); (RCC->APB2RSTR &= ~(1 << 18)); } while(0)
+#define TIM20_REG_RESET()  do { (RCC->APB2RSTR |=  (1 << 20)); (RCC->APB2RSTR &= ~(1 << 20)); } while(0)
+
+#define TIM2_REG_RESET()   do { (RCC->APB1RSTR |=  (1 << 0));  (RCC->APB1RSTR &= ~(1 << 0));  } while(0)
+#define TIM3_REG_RESET()   do { (RCC->APB1RSTR |=  (1 << 1));  (RCC->APB1RSTR &= ~(1 << 1));  } while(0)
+#define TIM4_REG_RESET()   do { (RCC->APB1RSTR |=  (1 << 2));  (RCC->APB1RSTR &= ~(1 << 2));  } while(0)
+#define TIM6_REG_RESET()   do { (RCC->APB1RSTR |=  (1 << 4));  (RCC->APB1RSTR &= ~(1 << 4));  } while(0)
+#define TIM7_REG_RESET()   do { (RCC->APB1RSTR |=  (1 << 5));  (RCC->APB1RSTR &= ~(1 << 5));  } while(0)
 
 
 #define IRQ_NO_EXTI0 		6
@@ -376,6 +477,21 @@ typedef struct {
  */
 #define NVIC_IRQ_PRI0    0
 #define NVIC_IRQ_PRI15    15
+
+
+#define TIM1_BRK_TIM15_IRQn     24
+#define TIM1_UP_TIM16_IRQn      25
+#define TIM1_TRG_COM_TIM17_IRQn 26
+#define TIM1_CC_IRQn            27
+#define TIM2_IRQn               28
+#define TIM3_IRQn               29
+#define TIM4_IRQn               30
+#define TIM6_DAC_IRQn           54
+#define TIM7_IRQn               55
+#define TIM8_BRK_IRQn           43
+#define TIM8_UP_IRQn            44
+#define TIM8_TRG_COM_IRQn       45
+#define TIM8_CC_IRQn            46
 
 
 
@@ -438,9 +554,21 @@ typedef struct {
 #define SPI_SR_FRLVL		9
 #define SPI_SR_FTLVL		11
 
-
-
-
+//void NVIC_EnableIRQ(uint8_t IRQNumber) {
+//    if (IRQNumber < 32) {
+//        *NVIC_ISER0 |= (1 << IRQNumber);
+//    } else if (IRQNumber < 64) {
+//        *NVIC_ISER1 |= (1 << (IRQNumber % 32));
+//    }
+//}
+//
+//void NVIC_DisableIRQ(uint8_t IRQNumber) {
+//    if (IRQNumber < 32) {
+//        *NVIC_ICER0 |= (1 << IRQNumber);
+//    } else if (IRQNumber < 64) {
+//        *NVIC_ICER1 |= (1 << (IRQNumber % 32));
+//    }
+//}
 
 #include "stm32f3xx_spi_driver.h"
 #include "stm32f3xx_gpio_driver.h"
